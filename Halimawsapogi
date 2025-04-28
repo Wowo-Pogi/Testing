@@ -1,0 +1,67 @@
+-- Create a new ScreenGui
+local Wowo = Instance.new("ScreenGui")
+Wowo.Name = "Wowo Speed"
+Wowo.Parent = game.CoreGui
+Wowo.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- Create a new Frame
+local Frame = Instance.new("Frame")
+Frame.Parent = Wowo
+Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 0) -- Yellow color
+Frame.BackgroundTransparency = 0.5 -- Adjusted transparency
+Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Frame.BorderSizePixel = 0
+Frame.Position = UDim2.new(0.5, -55, 0.5, -25)
+Frame.Size = UDim2.new(0, 110, 0, 50)
+Frame.Active = true
+Frame.Draggable = true
+
+-- Add a UICorner to the Frame
+local UICorner = Instance.new("UICorner")
+UICorner.Parent = Frame
+
+-- Create a new TextButton
+local TextButton = Instance.new("TextButton")
+TextButton.Parent = Frame
+TextButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Red color
+TextButton.BackgroundTransparency = 0.5
+TextButton.BorderSizePixel = 0
+TextButton.Position = UDim2.new(0, 5, 0, 5)
+TextButton.Size = UDim2.new(0, 100, 0, 40)
+TextButton.Font = Enum.Font.GothamBlack
+TextButton.Text = "Wowo Speed OFF"
+TextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextButton.TextScaled = true
+TextButton.TextSize = 11.000
+
+-- Add another UICorner to the TextButton
+local UICorner_2 = Instance.new("UICorner")
+UICorner_2.Parent = TextButton
+
+-- Set up the walk speed feature
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+local mt = getrawmetatable(game)
+local backup
+local enforceMinSpeed = false
+
+backup = hookfunction(mt.__newindex, newcclosure(function(self, key, value)
+    if key == "WalkSpeed" and enforceMinSpeed then
+        value = math.max(value, 16)
+    end
+    return backup(self, key, value)
+end))
+
+TextButton.MouseButton1Click:Connect(function()
+    enforceMinSpeed = not enforceMinSpeed
+    TextButton.Text = enforceMinSpeed and "Wowo Speed ON" or "Wowo Speed OFF"
+end)
+
+-- Send a notification with credits
+game.StarterGui:SetCore("SendNotification", {
+    Title = "Wowo",
+    Text = "Speed XD",
+    Duration = 5
+})
